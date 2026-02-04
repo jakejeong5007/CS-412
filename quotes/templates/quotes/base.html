@@ -12,10 +12,10 @@
     <div class="container">
       <h1 class="site-title">Famous Quotes</h1>
       <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/quote">New Quote</a>
-        <a href="/show_all">Show All</a>
-        <a href="/about">About</a>
+      <a href="{% url 'quotes:quote' %}">Home</a>
+      <a href="{% url 'quotes:quote_page' %}">New Quote</a>
+      <a href="{% url 'quotes:show_all' %}">Show All</a>
+      <a href="{% url 'quotes:about' %}">About</a>
       </nav>
     </div>
   </header>
