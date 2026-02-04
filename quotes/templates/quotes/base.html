@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Quotes{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'quotes/style.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1 class="site-title">Famous Quotes</h1>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/quote">New Quote</a>
+        <a href="/show_all">Show All</a>
+        <a href="/about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>CS412 Django Quotes App</small>
+    </div>
+  </footer>
+</body>
+</html>

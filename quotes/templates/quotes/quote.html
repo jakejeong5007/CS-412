@@ -1,0 +1,12 @@
+{% extends "quotes/base.html" %}
+
+{% block title %}Quote{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <img class="portrait" src="{{ image }}" alt="Famous person">
+    <blockquote class="quote">
+      “{{ quote }}”
+    </blockquote>
+  </section>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "quotes/base.html" %}
+
+{% block title %}Show All{% endblock %}
+
+{% block content %}
+  <h2>All Quotes</h2>
+  <div class="grid">
+    {% for q in quotes %}
+      <div class="card">
+        <blockquote class="quote">“{{ q }}”</blockquote>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2>All Images</h2>
+  <div class="grid">
+    {% for img in images %}
+      <div class="card">
+        <img class="portrait" src="{{ img }}" alt="Famous person image">
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
