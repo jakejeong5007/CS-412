@@ -1,0 +1,180 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f7f9;
+  color: #222;
+}
+
+.container {
+  width: 900px;
+  max-width: 92%;
+  margin: 0 auto;
+  padding: 16px 0;
+}
+
+/* Header / Nav */
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+}
+
+.site-title {
+  margin: 0;
+  padding: 16px 0 8px;
+  font-size: 24px;
+}
+
+.nav {
+  padding-bottom: 12px;
+}
+
+.nav a {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 6px 10px;
+  text-decoration: none;
+  color: #1a73e8;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.nav a:hover {
+  border-color: #cfe0ff;
+  background: #eef5ff;
+}
+
+/* Main content boxes */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-top: 16px;
+  border-radius: 4px;
+}
+
+.muted {
+  color: #666;
+}
+
+/* Form */
+.fieldset {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 14px 0;
+  background: #fff;
+}
+
+.fieldset legend {
+  padding: 0 6px;
+  color: #444;
+}
+
+.check-row {
+  display: block;
+  margin: 10px 0;
+}
+
+.price {
+  color: #0b7a3b;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.desc {
+  display: block;
+  color: #666;
+  font-size: 13px;
+  margin-left: 22px;
+  margin-top: 3px;
+}
+
+.option-block {
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.options {
+  margin-left: 22px;
+  margin-top: 8px;
+}
+
+.form-row {
+  margin: 10px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.actions {
+  margin-top: 12px;
+}
+
+.btn,
+button.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #1a73e8;
+  background: #1a73e8;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn:hover,
+button.btn:hover {
+  background: #1558b0;
+  border-color: #1558b0;
+}
+
+.btn.secondary {
+  background: #fff;
+  color: #1a73e8;
+}
+
+.btn.secondary:hover {
+  background: #eef5ff;
+}
+
+/* Confirmation list */
+.list {
+  margin: 10px 0 0;
+}
+
+.total {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+  font-size: 16px;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 20px;
+  padding: 14px 0;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+}

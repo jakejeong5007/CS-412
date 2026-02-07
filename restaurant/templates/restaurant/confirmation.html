@@ -1,0 +1,44 @@
+{% extends "restaurant/base.html" %}
+
+{% block title %}Confirmation{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h2>Order Confirmation</h2>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+      <div class="actions">
+        <a class="btn" href="{% url 'restaurant:order' %}">Go to Order Page</a>
+      </div>
+    {% else %}
+      <p class="muted">Your estamated order completion time is {{ estimated_time }}</p>
+      <p class="muted">Thanks{% if customer_name %}, {{ customer_name }}{% endif %}! Here’s your order:</p>
+
+      <ul class="list">
+        {% for item in ordered_items %}
+          <li>{{ item }}</li>
+        {% empty %}
+          <li><em>No items selected.</em></li>
+        {% endfor %}
+      </ul>
+
+      {% if instructions %}
+        <div class="note">
+          <h3>Special Instructions</h3>
+          <p>{{ instructions }}</p>
+        </div>
+      {% endif %}
+
+      <div class="total">
+        <span>Total</span>
+        <strong>${{ total }}</strong>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="{% url 'restaurant:order' %}">Place Another Order</a>
+        <a class="btn secondary" href="{% url 'restaurant:main_page' %}">Back to Home</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

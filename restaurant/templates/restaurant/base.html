@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Restaurant{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'restaurant/style.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1 class="logo">Einstein Eats</h1>
+        <p class="tagline">Simple, fast, and tasty.</p>
+      </div>
+
+      <nav class="nav">
+        <a href="{% url 'restaurant:main_page' %}">Home</a>
+        <a href="{% url 'restaurant:order' %}">Order</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>©Einstein Eats</p>
+    </div>
+  </footer>
+</body>
+</html>

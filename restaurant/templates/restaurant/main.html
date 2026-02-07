@@ -1,0 +1,30 @@
+{% extends "restaurant/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <section class="card">
+    <h2>Welcome to Einstein Eats</h2>
+    <p>
+      We serve comforting classics and a rotating daily special. Click “Order” to build your meal.
+    </p>
+    <div class="actions">
+      <a class="btn" href="{% url 'restaurant:order' %}">Start an Order</a>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>Hours</h3>
+      <p>Mon–Fri: 11am–9pm<br>Sat–Sun: 12pm–8pm</p>
+    </div>
+    <div class="card">
+      <h3>Location</h3>
+      <p>Boston, MA (Delivery & Pickup)</p>
+    </div>
+    <div class="card">
+      <h3>Contact</h3>
+      <p>Email: orders@example.com<br>Phone: (617) 555-0100</p>
+    </div>
+  </section>
+{% endblock %}
