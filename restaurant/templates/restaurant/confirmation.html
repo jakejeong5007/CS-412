@@ -12,7 +12,8 @@
         <a class="btn" href="{% url 'restaurant:order' %}">Go to Order Page</a>
       </div>
     {% else %}
-      <p class="muted">Your estamated order completion time is {{ estimated_time }}</p>
+      <p class="muted">Your estamated order completion time is {{ estimated_time }} <br>
+        Current time is: {{ curr_time }}</p>
       <p class="muted">Thanks{% if customer_name %}, {{ customer_name }}{% endif %}! Here’s your order:</p>
 
       <ul class="list">

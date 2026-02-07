@@ -87,7 +87,8 @@ def confirmation(request):
     now = time.time() 
     estimated_time = now + random.randint(30*60, 60*60) 
     estimated_time = time.strftime("%H:%M", time.localtime(estimated_time))
-
+    curr_time = time.strftime("%H:%M", time.localtime(time.time()))
+    
     context = {
         "ordered_items": ordered_items,
         "total": round(total, 2),
@@ -96,5 +97,6 @@ def confirmation(request):
         "email": email,
         "instructions": instructions,
         "estimated_time": estimated_time,
+        "curr_time": curr_time,
     }
     return render(request, "restaurant/confirmation.html", context)
