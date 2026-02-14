@@ -1,0 +1,53 @@
+<!--
+File: show_profile.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+Description: Displays one profile and basic placeholders for stats/posts.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: @{{ profile.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+  <div class="profile-top">
+    <div class="left-col">
+      <img class="avatar" src="{{ profile.profile_image_url }}" alt="Profile image">
+
+      <div class="bio">
+        {% if profile.bio_text %}
+          {{ profile.bio_text|linebreaksbr }}
+        {% else %}
+          <span class="muted">No bio yet.</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="right-col">
+      <h1 class="name">{{ profile.display_name }}</h1>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num">TBD</div>
+          <div class="stat-label">posts</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">TBD</div>
+          <div class="stat-label">followers</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">TBD</div>
+          <div class="stat-label">following</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Posts</h2>
+
+  <div class="posts-area">
+    <h3 class="no-posts">No Posts</h3>
+  </div>
+
+</div>
+{% endblock %}
