@@ -20,11 +20,13 @@ Description: Displays one profile and their posts (first photo per post).
         {% else %}
           <span class="muted">No bio yet.</span>
         {% endif %}
-
-          <div class="muted" style="margin-top: 12px;">
-          Joined: {{ profile.join_date|date:"M d, Y" }}
       </div>
+      <p class="muted" style="margin-top: 10px; font-size: 14px;">
+        Joined: {{ profile.join_date|date:"M d, Y" }}
+      </p>
     </div>
+
+    
 
     <div class="right-col">
       <h1 class="name">{{ profile.display_name }}</h1>
