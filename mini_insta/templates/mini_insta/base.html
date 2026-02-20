@@ -1,6 +1,6 @@
 <!--
 File: base.html
-Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+Author: Jake Jeong (jeongsh@bu.edu), 02/18/2026
 Description: Base layout template (header/footer + content block).
 -->
 
@@ -18,7 +18,6 @@ Description: Base layout template (header/footer + content block).
   <header class="site-header">
     <div class="container">
       <h1 class="site-title">Mini Insta</h1>
-
     </div>
   </header>
 
@@ -29,7 +28,14 @@ Description: Base layout template (header/footer + content block).
   <footer class="site-footer">
     <div class="container">
       <p>&copy; {% now "Y" %} Mini Insta</p>
-      <p><a href="{% url 'mini_insta:show_all_profiles' %}">Back to all profiles</a></p>
+
+      <p>
+        <a href="{% url 'mini_insta:show_all_profiles' %}">Back to all profiles</a>
+        {% if profile %}
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:create_post' profile.pk %}">Create Post</a>
+        {% endif %}
+      </p>
     </div>
   </footer>
 </body>

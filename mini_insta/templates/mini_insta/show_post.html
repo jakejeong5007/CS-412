@@ -1,0 +1,59 @@
+<!--
+File: show_post.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+Description: Displays one Post, showing its photos (or a no-image placeholder) and caption.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Post{% endblock %}
+
+{% block content %}
+  <div class="profile-page">
+
+    <h1 class="name">Post</h1>
+
+    <div class="bio">
+      <strong>By:</strong> @{{ post.profile.username }}
+      <span class="muted">({{ post.timestamp }})</span>
+    </div>
+
+    <h2 class="section-title">Photos</h2>
+
+    <div class="posts-area">
+      {% with photos=post.get_all_photos %}
+        {% if photos %}
+          <div class="posts-grid">
+            {% for photo in photos %}
+              <div class="post-card">
+                <img class="post-img" src="{{ photo.image_url }}" alt="Post photo">
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="post-card">
+            <img class="post-img" src="https://via.placeholder.com/600x600?text=No+Image" alt="No image">
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <h2 class="section-title">Caption</h2>
+    <div class="posts-area">
+      {% if post.caption %}
+        <div class="post-card">
+          <div class="post-caption">{{ post.caption }}</div>
+        </div>
+      {% else %}
+        <span class="muted">No caption.</span>
+      {% endif %}
+    </div>
+
+    <div class="posts-area">
+      <p>
+        <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">Back to @{{ post.profile.username }}</a>
+      </p>
+    </div>
+
+  </div>
+{% endblock %}

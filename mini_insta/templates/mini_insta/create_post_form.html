@@ -1,0 +1,57 @@
+<!--
+File: create_post_form.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/18/2026
+Description: Form for creating a new Post for a specific Profile (caption + one image_url).
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Create Post{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <h1 class="name">Create Post</h1>
+
+  <div class="bio">
+    Creating a post for <strong>@{{ profile.username }}</strong>
+  </div>
+
+  <div class="posts-area">
+    <form method="post" action="{% url 'mini_insta:create_post' profile.pk %}">
+      {% csrf_token %}
+
+      <div class="post-card">
+        <div class="post-caption">
+          <label for="{{ form.caption.id_for_label }}"><strong>Caption</strong></label><br>
+          {{ form.caption }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="id_image_url"><strong>Image URL</strong></label><br>
+          <input
+            type="url"
+            name="image_url"
+            id="id_image_url"
+            placeholder="https://example.com/image.jpg"
+            
+            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 10px;"
+          >
+          <div class="muted" style="margin-top: 8px;">
+            Paste a direct image link (ending in .jpg/.png/.webp).
+          </div>
+        </div>
+      </div>
+
+      <div class="posts-area" style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+        <button type="submit">Submit</button>
+        <a href="{% url 'mini_insta:show_profile' profile.pk %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

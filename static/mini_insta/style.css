@@ -3,6 +3,7 @@ File: style.css
 Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
 Description: Styling for the mini_insta app (layout, profile pages, grids).
 */
+
 .container { max-width: 980px; margin: 0 auto; padding: 16px; }
 .site-header, .site-footer { border-bottom: 1px solid #ddd; }
 .site-footer { border-top: 1px solid #ddd; border-bottom: none; margin-top: 24px; }
@@ -108,4 +109,43 @@ Description: Styling for the mini_insta app (layout, profile pages, grids).
   font-size: 44px;
   font-weight: 900;
   margin: 20px 0 0;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+
+.post-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.post-caption {
+  padding: 10px 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-size: 16px;
+}
+
+.post-caption.muted {
+  font-weight: 500;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }

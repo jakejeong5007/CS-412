@@ -1,7 +1,7 @@
 <!--
 File: show_profile.html
 Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
-Description: Displays one profile and basic placeholders for stats/posts.
+Description: Displays one profile and their posts (first photo per post).
 -->
 
 {% extends "mini_insta/base.html" %}
@@ -28,7 +28,7 @@ Description: Displays one profile and basic placeholders for stats/posts.
 
       <div class="stats-row">
         <div class="stat-box">
-          <div class="stat-num">TBD</div>
+          <div class="stat-num">{{ profile.get_all_posts.count }}</div>
           <div class="stat-label">posts</div>
         </div>
         <div class="stat-box">
@@ -46,7 +46,33 @@ Description: Displays one profile and basic placeholders for stats/posts.
   <h2 class="section-title">Posts</h2>
 
   <div class="posts-area">
-    <h3 class="no-posts">No Posts</h3>
+    {% with posts=profile.get_all_posts %}
+      {% if posts %}
+        <div class="profile-grid">
+          {% for post in posts %}
+            <a href="{% url 'mini_insta:show_post' post.pk %}" class="post-link">
+              <div class="profile-card">
+                {% with photos=post.get_all_photos %}
+                  {% if photos %}
+                    <img class="profile-img" src="{{ photos.0.image_url }}" alt="Post image">
+                  {% else %}
+                    <img class="profile-img" src="https://via.placeholder.com/600x600?text=No+Image" alt="No image">
+                  {% endif %}
+                {% endwith %}
+
+                {% if post.caption %}
+                  <div class="display-name">{{ post.caption }}</div>
+                {% else %}
+                  <div class="username muted">No caption.</div>
+                {% endif %}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <h3 class="no-posts">No Posts</h3>
+      {% endif %}
+    {% endwith %}
   </div>
 
 </div>
