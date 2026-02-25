@@ -11,8 +11,8 @@ class Profile(models.Model):
     Docstring for Profile
     '''
 
-    username = models.TextField(blank=False)
-    display_name = models.TextField(blank=False)
+    username = models.CharField(blank=False)
+    display_name = models.CharField(blank=False)
     profile_image_url = models.URLField(blank=True)
     bio_text = models.TextField(blank=True)
     join_date = models.DateField(auto_now=True)
@@ -26,6 +26,9 @@ class Profile(models.Model):
         '''
         posts = Post.objects.filter(profile=self)
         return posts
+    
+    def get_absolute_url(self):
+        return reverse('mini_insta:show_profile', kwargs={'pk': self.pk})
 
 
 class Post(models.Model):
@@ -59,8 +62,21 @@ class Photo(models.Model):
     '''
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    image_url = models.URLField(blank=False)
+    image_url = models.URLField(blank=True)
     timestamp = models.DateTimeField(auto_now=True)
+    image_file = models.ImageField(blank=True)
 
     def __str__(self):
-        return f'{self.post} {self.timestamp}'
+        if self.image_url:
+            return f"Photo(post={self.post}, url={self.image_url})"
+        if self.image_file:
+            return f"Photo(post={self.post}, url={self.image_file})"
+        return f"Photo (no image)"
+
+    def get_image_url(self):
+        if self.image_url:
+            return self.image_url
+        if self.image_file:
+            return self.image_file
+        return ""
+            

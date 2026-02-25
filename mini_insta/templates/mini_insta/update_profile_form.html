@@ -1,0 +1,55 @@
+<!--
+File: update_profile_form.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/18/2026
+Description: Form for updating profile information.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Update Profile{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <h1 class="name">Update Profile</h1>
+
+  <div class="bio">
+    Updating profile information for <strong>@{{ profile.username }}</strong>
+  </div>
+
+  <div class="posts-area">
+    <form method="post" action="{% url 'mini_insta:update_profile' profile.pk %}"
+    enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="post-card">
+        <div class="post-caption">
+          <label for="{{ form.display_name.id_for_label }}"><strong>Display Name</strong></label><br>
+          {{ form.display_name }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="{{ form.bio_text.id_for_label }}"><strong>Update Bio</strong></label><br>
+          {{ form.bio_text }}
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-caption">
+            <label for="{{ form.profile_image_url.id_for_label }}"><strong>Update Profile Image</strong></label><br>
+            {{ form.profile_image_url }}
+        </div>
+      </div>
+
+      <div class="posts-area" style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+        <button type="submit">Submit</button>
+        <a href="{% url 'mini_insta:show_profile' profile.pk %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

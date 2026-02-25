@@ -26,7 +26,11 @@ Description: Displays one Post, showing its photos (or a no-image placeholder) a
           <div class="posts-grid">
             {% for photo in photos %}
               <div class="post-card">
-                <img class="post-img" src="{{ photo.image_url }}" alt="Post photo">
+                {% if photo.image_url %}
+                  <img class="post-img" src="{{ photo.image_url }}" alt="Post photo">
+                {% elif photo.image_file %}
+                  <img class="post-img" src="{{ photo.image_file.url }}" alt="Post photo">
+                {% endif %}
               </div>
             {% endfor %}
           </div>

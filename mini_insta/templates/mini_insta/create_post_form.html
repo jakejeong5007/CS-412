@@ -18,7 +18,8 @@ Description: Form for creating a new Post for a specific Profile (caption + one 
   </div>
 
   <div class="posts-area">
-    <form method="post" action="{% url 'mini_insta:create_post' profile.pk %}">
+    <form method="post" action="{% url 'mini_insta:create_post' profile.pk %}"
+    enctype="multipart/form-data">
       {% csrf_token %}
 
       <div class="post-card">
@@ -30,17 +31,16 @@ Description: Form for creating a new Post for a specific Profile (caption + one 
 
       <div class="post-card" style="margin-top: 14px;">
         <div class="post-caption">
-          <label for="id_image_url"><strong>Image URL</strong></label><br>
+          <label for="id_files"><strong>Upload image(s)</strong></label><br>
           <input
-            type="url"
-            name="image_url"
-            id="id_image_url"
-            placeholder="https://example.com/image.jpg"
-            
-            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 10px;"
+            type="file"
+            name="files"
+            id="id_files"
+            multiple
+            accept="image/*"
           >
           <div class="muted" style="margin-top: 8px;">
-            Paste a direct image link (ending in .jpg/.png/.webp).
+            Select one or more image files to upload.
           </div>
         </div>
       </div>

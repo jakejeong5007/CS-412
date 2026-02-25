@@ -12,6 +12,10 @@ body {
   padding: 16px 0;
 }
 
+.right-col{
+  min-width: 0;
+}
+
 /* Header / Nav */
 .site-header {
   background: #ffffff;

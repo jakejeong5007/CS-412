@@ -42,7 +42,7 @@ Description: Styling for the mini_insta app (layout, profile pages, grids).
 .profile-top {
   display: grid;
   grid-template-columns: 320px 1fr;
-  gap: 70px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -72,12 +72,12 @@ Description: Styling for the mini_insta app (layout, profile pages, grids).
 
 .stats-row {
   display: flex;
-  gap: 22px;
+  gap: 12px;
   justify-content: center;
 }
 
 .stat-box {
-  width: 250px;
+  width: 200px;
   padding: 18px 22px;
   background: #f6f4ff;
   border-left: 4px solid #00000000;
@@ -148,4 +148,21 @@ Description: Styling for the mini_insta app (layout, profile pages, grids).
   text-decoration: none;
   color: inherit;
   display: block;
+}
+
+.update-display-name {
+  padding: 10px 8px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-size: 16px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
 }

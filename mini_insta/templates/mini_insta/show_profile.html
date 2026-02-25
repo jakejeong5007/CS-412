@@ -24,10 +24,12 @@ Description: Displays one profile and their posts (first photo per post).
       <p class="muted" style="margin-top: 10px; font-size: 14px;">
         Joined: {{ profile.join_date|date:"M d, Y" }}
       </p>
+      <div style="margin-top: 12px;">
+        <a class="btn" href="{% url 'mini_insta:update_profile' profile.pk %}">Edit Profile</a>
+      </div>
     </div>
-
+      
     
-
     <div class="right-col">
       <h1 class="name">{{ profile.display_name }}</h1>
 
@@ -57,9 +59,13 @@ Description: Displays one profile and their posts (first photo per post).
           {% for post in posts %}
             <a href="{% url 'mini_insta:show_post' post.pk %}" class="post-link">
               <div class="profile-card">
-                {% with photos=post.get_all_photos %}
-                  {% if photos %}
-                    <img class="profile-img" src="{{ photos.0.image_url }}" alt="Post image">
+                {% with photo=post.get_all_photos.first %}
+                  {% if photo %}
+                    {% if photo.image_url %}
+                      <img class="profile-img" src="{{ photo.image_url }}" alt="Post photo">
+                    {% elif photo.image_file %}
+                      <img class="profile-img" src="{{ photo.image_file.url }}" alt="Post photo">
+                    {% endif %}
                   {% else %}
                     <img class="profile-img" src="https://via.placeholder.com/600x600?text=No+Image" alt="No image">
                   {% endif %}

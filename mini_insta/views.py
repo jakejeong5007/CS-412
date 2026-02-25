@@ -5,9 +5,9 @@
 
 
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .models import Profile, Post, Photo
-from .forms import CreatePostForm
+from .forms import CreatePostForm, UpdateProfileForm
 
 # Create your views here.
 class ProfileListView(ListView):
@@ -54,9 +54,19 @@ class CreatePostView(CreateView):
         post.profile = profile
         post.save()
 
-        image_url = self.request.POST.get('image_url', '').strip()
-        if image_url:
-            Photo.objects.create(post=post, image_url=image_url)
+        # image_url = self.request.POST.get('image_url', '').strip()
+        # if image_url:
+        #     Photo.objects.create(post=post, image_url=image_url)
+
+        files = self.request.FILES.getlist('files')
+        for file in files:
+            Photo.objects.create(post=post, image_file=file)
 
         self.object = post
         return super().form_valid(form)
+
+class UpdateProfileView(UpdateView):
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_insta/update_profile_form.html"
+
