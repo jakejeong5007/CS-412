@@ -36,6 +36,9 @@ class PostDetailView(DetailView):
     context_object_name = "post"
 
 class CreatePostView(CreateView):
+    """
+    CreateView that creates a new post.
+    """
     form_class = CreatePostForm
     template_name = "mini_insta/create_post_form.html"
 
@@ -67,11 +70,17 @@ class CreatePostView(CreateView):
         return super().form_valid(form)
 
 class UpdateProfileView(UpdateView):
+    """
+    UpdateView that updates profile information.
+    """
     model = Profile
     form_class = UpdateProfileForm
     template_name = "mini_insta/update_profile_form.html"
 
 class DeletePostView(DeleteView):
+    """
+    DeleteView that deletes selected post.
+    """
     model = Post
     template_name = "mini_insta/delete_post_form.html"
 
@@ -89,6 +98,9 @@ class DeletePostView(DeleteView):
     
 
 class UpdatePostView(UpdateView):
+    """
+    UpdateView that updates post caption.
+    """
     model = Post
     form_class = UpdatePostForm
     template_name = "mini_insta/update_post_form.html"
@@ -103,4 +115,4 @@ class UpdatePostView(UpdateView):
         return context
     
     def get_success_url(self):
-        return reverse("mini_insta:show_profile", kwargs={"pk": self.object.profile.pk})
+        return reverse("mini_insta:show_post", kwargs={"pk": self.object.pk})
