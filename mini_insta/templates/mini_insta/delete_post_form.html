@@ -1,20 +1,17 @@
 <!--
-File: show_post.html
+File: delete_post_form.html
 Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
-Description: Displays one Post, showing its photos (or a no-image placeholder) and caption.
+Description: Form to delete a post.
 -->
 
 {% extends "mini_insta/base.html" %}
 
-{% block title %}MiniInsta: Post{% endblock %}
+{% block title %}MiniInsta: Delete Post{% endblock %}
 
 {% block content %}
   <div class="profile-page">
+
     <h1 class="name">Post</h1>
-      <div style="margin-top: 12px;">
-        <a class="btn" href="{% url 'mini_insta:delete_post' post.pk %}">Delete Post</a>
-        <a class="btn" href="{% url 'mini_insta:update_post' post.pk %}">Update Post</a>
-      </div>
 
     <div class="bio">
       <strong>By:</strong> @{{ post.profile.username }}
@@ -56,11 +53,17 @@ Description: Displays one Post, showing its photos (or a no-image placeholder) a
       {% endif %}
     </div>
 
-    <div class="posts-area">
-      <p>
-        <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">Back to @{{ post.profile.username }}</a>
-      </p>
-    </div>
+  <div class="posts-area">
+    <form method="post" action="">
+      {% csrf_token %}
+
+      <div class="posts-area" style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+        <button type="submit">Delete</button>
+        <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
 
   </div>
 {% endblock %}

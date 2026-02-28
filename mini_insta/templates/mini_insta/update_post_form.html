@@ -1,0 +1,41 @@
+<!--
+File: update_post_form.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/18/2026
+Description: Form for updating a Post caption.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Update Post{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <h1 class="name">Update Post</h1>
+
+  <div class="bio">
+    Updating a post for <strong>@{{ profile.username }}</strong>
+  </div>
+
+  <div class="posts-area">
+    <form method="post" action="{% url 'mini_insta:update_post' post.pk %}"
+    enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="post-card">
+        <div class="post-caption">
+          <label for="{{ form.caption.id_for_label }}"><strong>Caption</strong></label><br>
+          {{ form.caption }}
+        </div>
+      </div>
+
+      <div class="posts-area" style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+        <button type="submit">Submit</button>
+        <a href="{% url 'mini_insta:show_profile' profile.pk %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

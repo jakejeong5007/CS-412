@@ -17,4 +17,18 @@ class UpdateProfileForm(forms.ModelForm):
         model = Profile
         fields = ['display_name', 'profile_image_url', 'bio_text']
     
-    
+
+class DeletePostForm(forms.ModelForm):
+    """A form to delete a post"""
+
+    class Meta:
+        model = Post
+        fields = ['profile']
+
+class UpdatePostForm(forms.ModelForm):
+    """A form to update post information"""
+
+    class Meta:
+        model = Post
+        fields = ['caption']
+

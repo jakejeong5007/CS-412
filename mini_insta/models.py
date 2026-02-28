@@ -31,7 +31,7 @@ class Profile(models.Model):
         return reverse('mini_insta:show_profile', kwargs={'pk': self.pk})
 
 
-class Post(models.Model):
+class Post(models.Model): 
     '''
     Docstring for Post
     '''
