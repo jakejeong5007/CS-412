@@ -1,0 +1,38 @@
+<!--
+File: show_following.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
+Description: Displays all profiles with links to each profile page.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}{{ profile.display_name }} Following{% endblock %}
+
+{% block content %}
+  <h2>{{ profile.display_name }}'s Following</h2>
+
+  {% with profiles=profile.get_following %}
+    {% if profiles %}
+      <div class="profile-grid">
+        {% for p in profiles %}
+          <div class="profile-card">
+            <a href="{% url 'mini_insta:show_profile' p.pk %}">
+              <img class="profile-img"
+                   src="{{ p.profile_image_url|default:'https://via.placeholder.com/150' }}"
+                   alt="{{ p.display_name }}'s profile image">
+            </a>
+
+            <div class="profile-meta">
+              <div class="display-name">
+                <a href="{% url 'mini_insta:show_profile' p.pk %}">{{ p.display_name }}</a>
+              </div>
+              <div class="username">@{{ p.username }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">No followers yet.</p>
+    {% endif %}
+  {% endwith %}
+{% endblock %}

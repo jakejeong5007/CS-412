@@ -1,0 +1,110 @@
+<!--
+File: show_feed.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
+Description: Displays posts from profiles that the user follows.
+-->
+
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Feed{% endblock %}
+
+{% block content %}
+  <div class="profile-page">
+    <h1 class="name">Feed</h1>
+    <div class="bio">
+      Viewing as <strong>@{{ profile.username }}</strong>
+    </div>
+
+    <div class="posts-area">
+      {% if posts %}
+        {% for post in posts %}
+          <div class="post-card" style="margin-bottom: 18px;">
+            <div class="bio" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">
+                <img class="avatar"
+                     src="{{ post.profile.profile_image_url|default:'https://via.placeholder.com/64' }}"
+                     alt="{{ post.profile.display_name }} profile image"
+                     style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+              </a>
+
+              <div>
+                <div class="display-name" style="line-height:1.1;">
+                  <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">
+                    <strong>{{ post.profile.display_name }}</strong>
+                  </a>
+                </div>
+                <div class="username muted" style="line-height:1.1;">
+                  @{{ post.profile.username }} · {{ post.timestamp }}
+                </div>
+              </div>
+            </div>
+
+            {% with photos=post.get_all_photos %}
+              {% if photos %}
+                {% with first_photo=photos.0 %}
+                  {% if first_photo.image_url %}
+                    <a href="{% url 'mini_insta:show_post' post.pk %}">
+                      <img class="post-img" src="{{ first_photo.image_url }}" alt="Post photo">
+                    </a>
+                  {% elif first_photo.image_file %}
+                    <a href="{% url 'mini_insta:show_post' post.pk %}">
+                      <img class="post-img" src="{{ first_photo.image_file.url }}" alt="Post photo">
+                    </a>
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                <a href="{% url 'mini_insta:show_post' post.pk %}">
+                  <img class="post-img" src="https://via.placeholder.com/600x600?text=No+Image" alt="No image">
+                </a>
+              {% endif %}
+            {% endwith %}
+
+            {% if post.caption %}
+              <div class="post-caption" style="margin-top:10px;">
+                <strong>@{{ post.profile.username }}</strong> {{ post.caption }}
+              </div>
+            {% endif %}
+
+            {% with likes=post.get_all_likes %}
+              {% if likes %}
+                {% with first_like=likes.0 %}
+                  <div class="post-likes" style="margin-top:8px;">
+                    Liked by <strong>@{{ first_like.profile.username }}</strong>
+                    {% if likes|length > 1 %}
+                      and <strong>{{ likes|length|add:"-1" }} others</strong>
+                    {% endif %}
+                  </div>
+                {% endwith %}
+              {% else %}
+                <div class="post-likes muted" style="margin-top:8px;">
+                  Be the first to like this.
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            {% with comments=post.get_all_comments %}
+              <div class="post-comments" style="margin-top:8px;">
+                {% if comments %}
+                  {% for c in comments %}
+                    <div class="comment-row">
+                      <strong>@{{ c.profile.username }}</strong> {{ c.text }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="muted">No comments yet.</div>
+                {% endif %}
+              </div>
+            {% endwith %}
+
+            <div style="margin-top:10px;">
+              <a href="{% url 'mini_insta:show_post' post.pk %}">View post</a>
+            </div>
+
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="muted">Your feed is empty. Follow someone to see posts here.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

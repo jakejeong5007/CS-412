@@ -1,0 +1,25 @@
+<!--
+File: search.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
+Description: Display a textbox for query input that will be used to search profiles and posts.
+-->
+
+
+{% extends "mini_insta/base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+  <div class="profile-page">
+    <h1 class="name">Search</h1>
+    <div class="bio">@{{ profile.username }}</div>
+
+    <p class="muted">Search for text, tags, or people:</p>
+
+    <form method="get" action="{% url 'mini_insta:search' profile.pk %}">
+      <textarea name="query" rows="3" style="width:100%; max-width:720px;"></textarea>
+      <div style="margin-top:12px;">
+        <button class="btn" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

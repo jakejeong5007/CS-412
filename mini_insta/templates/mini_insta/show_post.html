@@ -1,6 +1,6 @@
 <!--
 File: show_post.html
-Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
 Description: Displays one Post, showing its photos (or a no-image placeholder) and caption.
 -->
 
@@ -45,7 +45,7 @@ Description: Displays one Post, showing its photos (or a no-image placeholder) a
       {% endwith %}
     </div>
 
-    <h2 class="section-title">Caption</h2>
+    <!-- <h2 class="section-title">Caption</h2> -->
     <div class="posts-area">
       {% if post.caption %}
         <div class="post-card">
@@ -55,6 +55,39 @@ Description: Displays one Post, showing its photos (or a no-image placeholder) a
         <span class="muted">No caption.</span>
       {% endif %}
     </div>
+
+    <div class="posts-area">
+  {% with likes=post.get_all_likes %}
+    {% if likes %}
+      {% with first_like=likes.0 %}
+        <div class="post-likes">
+          Liked by <strong>@{{ first_like.profile.username }}</strong>
+          {% if likes|length > 1 %}
+            and <strong>{{ likes|length|add:"-1" }} others</strong>
+          {% endif %}
+        </div>
+      {% endwith %}
+    {% else %}
+      <div class="post-likes muted">Be the first to like this.</div>
+    {% endif %}
+  {% endwith %}
+
+  {% with comments=post.get_all_comments %}
+    <div class="post-comments">
+      {% if comments %}
+        {% for c in comments %}
+          <div class="comment-row">
+            <strong>@{{ c.profile.username }}</strong>
+            {{ c.text }}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="muted">No comments yet.</div>
+      {% endif %}
+    </div>
+  {% endwith %}
+</div>
+
 
     <div class="posts-area">
       <p>

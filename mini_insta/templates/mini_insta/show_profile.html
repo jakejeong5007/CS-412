@@ -1,6 +1,6 @@
 <!--
 File: show_profile.html
-Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
 Description: Displays one profile and their posts (first photo per post).
 -->
 
@@ -39,12 +39,12 @@ Description: Displays one profile and their posts (first photo per post).
           <div class="stat-label">posts</div>
         </div>
         <div class="stat-box">
-          <div class="stat-num">TBD</div>
-          <div class="stat-label">followers</div>
+          <div class="stat-num">{{ profile.get_num_followers }}</div>
+          <a class="stat-label" href="{% url 'mini_insta:show_followers' profile.pk %}">followers</a>
         </div>
         <div class="stat-box">
-          <div class="stat-num">TBD</div>
-          <div class="stat-label">following</div>
+          <div class="stat-num">{{ profile.get_num_following }}</div>
+          <a class="stat-label" href="{% url 'mini_insta:show_following' profile.pk %}">following</a>
         </div>
       </div>
     </div>

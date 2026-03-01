@@ -1,6 +1,6 @@
 <!--
 File: base.html
-Author: Jake Jeong (jeongsh@bu.edu), 02/18/2026
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
 Description: Base layout template (header/footer + content block).
 -->
 
@@ -28,12 +28,34 @@ Description: Base layout template (header/footer + content block).
   <footer class="site-footer">
     <div class="container">
       <p>&copy; {% now "Y" %} Mini Insta</p>
-
       <p>
-        <a href="{% url 'mini_insta:show_all_profiles' %}">Back to all profiles</a>
+        {% if profile %}
+          <a href="{% url 'mini_insta:show_feed' profile.pk %}">Feed</a>
+        {% elif post %}
+          <a href="{% url 'mini_insta:show_feed' post.profile.pk %}">Feed</a>
+        {% else %}
+          <a href="{% url 'mini_insta:show_all_profiles' %}">Home</a>
+        {% endif %}
+
         {% if profile %}
           &nbsp;|&nbsp;
           <a href="{% url 'mini_insta:create_post' profile.pk %}">Create Post</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:show_profile' profile.pk %}">Profile</a>
+
+        {% elif post %}
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:create_post' post.profile.pk %}">Create Post</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">Profile</a>
+        {% endif %}
+
+        {% if profile %}
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:search' profile.pk %}">Search</a>
+        {% elif post %}
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:search' post.profile.pk %}">Search</a>
         {% endif %}
       </p>
     </div>

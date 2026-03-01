@@ -1,0 +1,135 @@
+<!--
+File: search_results.html
+Author: Jake Jeong (jeongsh@bu.edu), 02/28/2026
+Description: Display search results (profiles and posts) based on user query
+-->
+
+
+{% extends "mini_insta/base.html" %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+  <div class="profile-page">
+    <h1 class="name">Search Results</h1>
+    <div class="bio">@{{ profile.username }}</div>
+
+    <p>
+      <a href="{% url 'mini_insta:search' profile.pk %}">← Back to search</a>
+    </p>
+
+    {% if not query %}
+      <p class="muted">Enter a query to search.</p>
+    {% else %}
+      <h2 class="section-title">Profiles matching the query for `{{ query }}`</h2>
+
+      {% if profiles %}
+        <div class="profile-grid">
+          {% for p in profiles %}
+            <div class="profile-card">
+              <a href="{% url 'mini_insta:show_profile' p.pk %}">
+                <img class="profile-img"
+                     src="{{ p.profile_image_url|default:'https://via.placeholder.com/150' }}"
+                     alt="{{ p.display_name }} profile image">
+              </a>
+              <div class="profile-meta">
+                <div class="display-name">
+                  <a href="{% url 'mini_insta:show_profile' p.pk %}">{{ p.display_name }}</a>
+                </div>
+                <div class="username">@{{ p.username }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="muted">No matching profiles.</p>
+      {% endif %}
+
+      <h2 class="section-title" style="margin-top:18px;">
+        Posts matching the query for `{{ query }}`
+      </h2>
+
+      {% if posts %}
+        {% for post in posts %}
+          <div class="post-card" style="margin-bottom:18px;">
+            {# author header #}
+            <div class="bio" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+              <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">
+                <img class="avatar"
+                     src="{{ post.profile.profile_image_url|default:'https://via.placeholder.com/64' }}"
+                     alt="{{ post.profile.display_name }} profile image"
+                     style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+              </a>
+              <div>
+                <div class="display-name">
+                  <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">
+                    <strong>{{ post.profile.display_name }}</strong>
+                  </a>
+                </div>
+                <div class="username muted">
+                  @{{ post.profile.username }} · {{ post.timestamp }}
+                </div>
+              </div>
+            </div>
+
+            {# first photo #}
+            {% with photos=post.get_all_photos %}
+              {% if photos %}
+                {% with first_photo=photos.0 %}
+                  {% if first_photo.image_url %}
+                    <a href="{% url 'mini_insta:show_post' post.pk %}">
+                      <img class="post-img" src="{{ first_photo.image_url }}" alt="Post photo">
+                    </a>
+                  {% elif first_photo.image_file %}
+                    <a href="{% url 'mini_insta:show_post' post.pk %}">
+                      <img class="post-img" src="{{ first_photo.image_file.url }}" alt="Post photo">
+                    </a>
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                <a href="{% url 'mini_insta:show_post' post.pk %}">
+                  <img class="post-img" src="https://via.placeholder.com/600x600?text=No+Image" alt="No image">
+                </a>
+              {% endif %}
+            {% endwith %}
+
+            {# caption #}
+            {% if post.caption %}
+              <div class="post-caption" style="margin-top:10px;">
+                <strong>@{{ post.profile.username }}</strong> {{ post.caption }}
+              </div>
+            {% endif %}
+
+            {# likes summary #}
+            {% with likes=post.get_all_likes %}
+              {% if likes %}
+                {% with first_like=likes.0 %}
+                  <div class="post-likes" style="margin-top:8px;">
+                    Liked by <strong>@{{ first_like.profile.username }}</strong>
+                    {% if likes|length > 1 %}
+                      and <strong>{{ likes|length|add:"-1" }} others</strong>
+                    {% endif %}
+                  </div>
+                {% endwith %}
+              {% endif %}
+            {% endwith %}
+
+            {# comments #}
+            {% with comments=post.get_all_comments %}
+              <div class="post-comments" style="margin-top:8px;">
+                {% for c in comments %}
+                  <div class="comment-row">
+                    <strong>@{{ c.profile.username }}</strong> {{ c.text }}
+                  </div>
+                {% empty %}
+                  <div class="muted">No comments yet.</div>
+                {% endfor %}
+              </div>
+            {% endwith %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="muted">No matching posts.</p>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}
