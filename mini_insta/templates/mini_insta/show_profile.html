@@ -25,7 +25,7 @@ Description: Displays one profile and their posts (first photo per post).
         Joined: {{ profile.join_date|date:"M d, Y" }}
       </p>
       <div style="margin-top: 12px;">
-        <a class="btn" href="{% url 'mini_insta:update_profile' profile.pk %}">Edit Profile</a>
+        <a class="btn" href="{% url 'mini_insta:update_profile'%}">Edit Profile</a>
       </div>
     </div>
       

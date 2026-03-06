@@ -14,7 +14,7 @@ Description: Display search results (profiles and posts) based on user query
     <div class="bio">@{{ profile.username }}</div>
 
     <p>
-      <a href="{% url 'mini_insta:search' profile.pk %}">← Back to search</a>
+      <a href="{% url 'mini_insta:search'%}">← Back to search</a>
     </p>
 
     {% if not query %}

@@ -15,7 +15,7 @@ Description: Display a textbox for query input that will be used to search profi
 
     <p class="muted">Search for text, tags, or people:</p>
 
-    <form method="get" action="{% url 'mini_insta:search' profile.pk %}">
+    <form method="get" action="{% url 'mini_insta:search'%}">
       <textarea name="query" rows="3" style="width:100%; max-width:720px;"></textarea>
       <div style="margin-top:12px;">
         <button class="btn" type="submit">Search</button>

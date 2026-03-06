@@ -1,0 +1,69 @@
+{% extends "mini_insta/base.html" %}
+
+{% block title %}MiniInsta: Create Profile{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  <h1 class="name">Create Profile</h1>
+
+  <div class="bio">
+    Fill in the form below to create your new profile.
+  </div>
+
+  <div class="posts-area">
+    <form method="post" action="{% url 'mini_insta:create_profile' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="post-card">
+        <div class="post-caption">
+          <label for="{{ user_form.username.id_for_label }}"><strong>Username</strong></label><br>
+          {{ user_form.username }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="{{ user_form.password1.id_for_label }}"><strong>Password</strong></label><br>
+          {{ user_form.password1 }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="{{ user_form.password2.id_for_label }}"><strong>Password Confirmation</strong></label><br>
+          {{ user_form.password2 }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 18px;">
+        <div class="post-caption">
+          <label for="{{ form.display_name.id_for_label }}"><strong>Display Name</strong></label><br>
+          {{ form.display_name }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="{{ form.bio_text.id_for_label }}"><strong>Bio Text</strong></label><br>
+          {{ form.bio_text }}
+        </div>
+      </div>
+
+      <div class="post-card" style="margin-top: 14px;">
+        <div class="post-caption">
+          <label for="{{ form.profile_image_url.id_for_label }}"><strong>Profile Image URL</strong></label><br>
+          {{ form.profile_image_url }}
+        </div>
+      </div>
+
+      <div class="posts-area" style="margin-top: 16px; display: flex; gap: 12px; align-items: center;">
+        <button type="submit">Create Profile</button>
+        <a href="{% url 'mini_insta:show_all_profiles' %}">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

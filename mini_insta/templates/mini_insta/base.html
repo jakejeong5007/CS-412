@@ -29,33 +29,26 @@ Description: Base layout template (header/footer + content block).
     <div class="container">
       <p>&copy; {% now "Y" %} Mini Insta</p>
       <p>
-        {% if profile %}
-          <a href="{% url 'mini_insta:show_feed' profile.pk %}">Feed</a>
-        {% elif post %}
-          <a href="{% url 'mini_insta:show_feed' post.profile.pk %}">Feed</a>
+
+        <a href="{% url 'mini_insta:show_all_profiles' %}">Home</a>
+        
+        {% if request.user.is_authenticated %}
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:show_feed'%}">Feed</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:create_post'%}">Create Post</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:profile'%}">Profile</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:search'%}">Search</a> 
+          <form action="{% url 'mini_insta:logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-link-btn">Log out</button>
+          </form>
+          <span>Logged in user: {{ request.user }}</span>
         {% else %}
-          <a href="{% url 'mini_insta:show_all_profiles' %}">Home</a>
-        {% endif %}
-
-        {% if profile %}
           &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:create_post' profile.pk %}">Create Post</a>
-          &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:show_profile' profile.pk %}">Profile</a>
-
-        {% elif post %}
-          &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:create_post' post.profile.pk %}">Create Post</a>
-          &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:show_profile' post.profile.pk %}">Profile</a>
-        {% endif %}
-
-        {% if profile %}
-          &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:search' profile.pk %}">Search</a>
-        {% elif post %}
-          &nbsp;|&nbsp;
-          <a href="{% url 'mini_insta:search' post.profile.pk %}">Search</a>
+          <a href="{% url 'mini_insta:login'%}">Login</a>
         {% endif %}
       </p>
     </div>

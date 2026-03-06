@@ -7,10 +7,26 @@
 from django.shortcuts import render
 from django.views.generic import *
 from .models import Profile, Post, Photo
-from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 # Create your views here.
+class LoginRequiredMixin(LoginRequiredMixin):
+
+    def get_profile(self):
+        user = self.request.user
+        profile = Profile.objects.get(user=user)
+        return profile
+    
+    def get_object(self):
+        return self.get_profile()
+    
+    def get_login_url(self):
+        return reverse('mini_insta:login')
+
 class ProfileListView(ListView):
     """
     Displays all profiles.
@@ -19,6 +35,20 @@ class ProfileListView(ListView):
     template_name = "mini_insta/show_all_profiles.html"  
     context_object_name = "profiles"  
     
+class CreateProfileView(CreateView):
+    """CreateView that will create a profile for a user"""
+    model = User
+    template_name = 'mini_insta/create_profile_form.html'
+    form_class = CreateProfileForm
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_form'] = UserCreationForm()
+        return context
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+
 class ProfileDetailView(DetailView):
     """
     DetailView that displays one Profile (by pk) using show_profile.html.
@@ -27,6 +57,11 @@ class ProfileDetailView(DetailView):
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile"
 
+class MyProfileView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = "mini_insta/show_profile.html"
+    context_object_name = "profile"
+    
 class PostDetailView(DetailView):
     """
     DetailView that displays one Post (by pk) using show_post.html.
@@ -35,7 +70,7 @@ class PostDetailView(DetailView):
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
 
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
     """
     CreateView that creates a new post.
     """
@@ -44,10 +79,7 @@ class CreatePostView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile_pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=profile_pk)
-
-        context['profile'] = profile
+        context['profile'] = self.get_profile()
         return context
 
     def form_valid(self, form):
@@ -69,7 +101,7 @@ class CreatePostView(CreateView):
         self.object = post
         return super().form_valid(form)
 
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     """
     UpdateView that updates profile information.
     """
@@ -77,7 +109,7 @@ class UpdateProfileView(UpdateView):
     form_class = UpdateProfileForm
     template_name = "mini_insta/update_profile_form.html"
 
-class DeletePostView(DeleteView):
+class DeletePostView(LoginRequiredMixin, DeleteView):
     """
     DeleteView that deletes selected post.
     """
@@ -92,12 +124,12 @@ class DeletePostView(DeleteView):
         context['profile'] = profile 
         context['post'] = post
         return context
-    
+
     def get_success_url(self):
         return reverse("mini_insta:show_profile", kwargs={"pk": self.object.profile.pk})
     
 
-class UpdatePostView(UpdateView):
+class UpdatePostView(LoginRequiredMixin, UpdateView):
     """
     UpdateView that updates post caption.
     """
@@ -113,7 +145,7 @@ class UpdatePostView(UpdateView):
         context['profile'] = profile 
         context['post'] = post
         return context
-    
+      
     def get_success_url(self):
         return reverse("mini_insta:show_post", kwargs={"pk": self.object.pk})
 
@@ -134,7 +166,7 @@ class ShowFollowingDetailView(DetailView):
     template_name = "mini_insta/show_following.html"
     context_object_name = "profile"
 
-class PostFeedListView(ListView):
+class PostFeedListView(LoginRequiredMixin, ListView):
     """
     ListView to show the posts of the profiles that the urser is following
     """
@@ -144,13 +176,13 @@ class PostFeedListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = Profile.objects.get(pk=self.kwargs["pk"])
+        profile = self.get_profile()
         context["profile"] = profile
         context["posts"] = profile.get_post_feed()
 
         return context
 
-class SearchView(ListView):
+class SearchView(LoginRequiredMixin, ListView):
     """
     SearchView that returns profiles and posts that matches the search query
     """
@@ -159,7 +191,7 @@ class SearchView(ListView):
     context_object_name = "posts"
 
     def dispatch(self, request, *args, **kwargs):
-        self.profile = Profile.objects.get(pk=kwargs["pk"])
+        self.profile = self.get_profile()
         if "query" not in request.GET or not request.GET.get("query", "").strip():
             return render(request, "mini_insta/search.html", {"profile": self.profile})
 
@@ -184,4 +216,4 @@ class SearchView(ListView):
         context["profiles"] = (by_username | by_display | by_bio).distinct().order_by("username")
 
         return context
-    
+
