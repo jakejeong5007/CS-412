@@ -49,6 +49,8 @@ Description: Base layout template (header/footer + content block).
         {% else %}
           &nbsp;|&nbsp;
           <a href="{% url 'mini_insta:login'%}">Login</a>
+          &nbsp;|&nbsp;
+          <a href="{% url 'mini_insta:create_profile'%}">Create Profile</a>
         {% endif %}
       </p>
     </div>

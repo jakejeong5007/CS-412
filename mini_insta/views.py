@@ -6,12 +6,14 @@
 
 from django.shortcuts import render
 from django.views.generic import *
-from .models import Profile, Post, Photo
+from .models import *
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.shortcuts import redirect
 
 # Create your views here.
 class LoginRequiredMixin(LoginRequiredMixin):
@@ -47,6 +49,15 @@ class CreateProfileView(CreateView):
         return context
     
     def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+
+        if not user_form.is_valid():
+            return self.form_invalid(form)
+        
+        user = user_form.save()
+        login(self.request, user, backend="django.contrib.auth.backends.ModelBackend")
+        form.instance.user = user
+
         return super().form_valid(form)
 
 class ProfileDetailView(DetailView):
@@ -56,6 +67,23 @@ class ProfileDetailView(DetailView):
     model = Profile
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        my_profile = None
+        is_following = False
+
+        if self.request.user.is_authenticated:
+            my_profile = Profile.objects.get(user=self.request.user)
+            is_following = Follow.objects.filter(
+                profile=self.object,
+                follower_profile=my_profile 
+            ).exists()
+
+        context["my_profile"] = my_profile
+        context["is_following"] = is_following
+        return context
 
 class MyProfileView(LoginRequiredMixin, DetailView):
     model = Profile
@@ -70,6 +98,19 @@ class PostDetailView(DetailView):
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        my_profile = None
+        has_liked = False
+
+        if self.request.user.is_authenticated:
+            my_profile = Profile.objects.get(user=self.request.user)
+            has_liked = Like.objects.filter(post=self.object, profile=my_profile).exists()
+
+        context["my_profile"] = my_profile
+        context["has_liked"] = has_liked
+        return context
+
 class CreatePostView(LoginRequiredMixin, CreateView):
     """
     CreateView that creates a new post.
@@ -83,8 +124,8 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        profile_pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=profile_pk)
+        profile = self.get_profile()
+
 
         post = form.save(commit=False)
         post.profile = profile
@@ -217,3 +258,57 @@ class SearchView(LoginRequiredMixin, ListView):
 
         return context
 
+class FollowProfileView(LoginRequiredMixin, TemplateView):
+    """
+    TemplateView for following an another user
+    """
+    def dispatch(self, request, *args, **kwargs):
+        me = self.get_profile()
+        other = Profile.objects.get(pk=kwargs["pk"])
+
+        if me.pk != other.pk:
+            if not Follow.objects.filter(profile=other, follower_profile=me).exists():
+                Follow.objects.create(profile=other, follower_profile=me)
+
+        return redirect(reverse("mini_insta:show_profile", kwargs={"pk": other.pk}))
+
+
+class UnfollowProfileView(LoginRequiredMixin, TemplateView):
+    """
+    TemplateView for unfollowing an another user
+    """
+    def dispatch(self, request, *args, **kwargs):
+        me = self.get_profile()
+        other = Profile.objects.get(pk=kwargs["pk"])
+
+        Follow.objects.filter(profile=other, follower_profile=me).delete()
+
+        return redirect(reverse("mini_insta:show_profile", kwargs={"pk": other.pk}))
+
+
+class LikePostView(LoginRequiredMixin, TemplateView):
+    """
+    TemplateView for liking an another user's post
+    """
+    def dispatch(self, request, *args, **kwargs):
+        me = self.get_profile()
+        post = Post.objects.get(pk=kwargs["pk"])
+
+        if post.profile_id != me.pk:
+            if not Like.objects.filter(post=post, profile=me).exists():
+                Like.objects.create(post=post, profile=me)
+
+        return redirect(reverse("mini_insta:show_post", kwargs={"pk": post.pk}))
+
+
+class UnlikePostView(LoginRequiredMixin, TemplateView):
+    """
+    TemplateView for unliking an another user's post
+    """
+    def dispatch(self, request, *args, **kwargs):
+        me = self.get_profile()
+        post = Post.objects.get(pk=kwargs["pk"])
+
+        Like.objects.filter(post=post, profile=me).delete()
+
+        return redirect(reverse("mini_insta:show_post", kwargs={"pk": post.pk}))

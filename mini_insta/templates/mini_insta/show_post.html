@@ -11,9 +11,19 @@ Description: Displays one Post, showing its photos (or a no-image placeholder) a
 {% block content %}
   <div class="profile-page">
     <h1 class="name">Post</h1>
-      <div style="margin-top: 12px;">
-        <a class="btn" href="{% url 'mini_insta:delete_post' post.pk %}">Delete Post</a>
-        <a class="btn" href="{% url 'mini_insta:update_post' post.pk %}">Update Post</a>
+      <div style="margin-top: 12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        {% if request.user.is_authenticated and my_profile %}
+          {% if my_profile.pk == post.profile.pk %}
+            <a class="btn" href="{% url 'mini_insta:delete_post' post.pk %}">Delete Post</a>
+            <a class="btn" href="{% url 'mini_insta:update_post' post.pk %}">Update Post</a>
+          {% else %}
+            {% if has_liked %}
+              <a class="btn" href="{% url 'mini_insta:delete_like' post.pk %}">Unlike</a>
+            {% else %}
+              <a class="btn" href="{% url 'mini_insta:like_post' post.pk %}">Like</a>
+            {% endif %}
+          {% endif %}
+        {% endif %}
       </div>
 
     <div class="bio">

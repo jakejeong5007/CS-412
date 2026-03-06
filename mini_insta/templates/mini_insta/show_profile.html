@@ -24,8 +24,18 @@ Description: Displays one profile and their posts (first photo per post).
       <p class="muted" style="margin-top: 10px; font-size: 14px;">
         Joined: {{ profile.join_date|date:"M d, Y" }}
       </p>
-      <div style="margin-top: 12px;">
-        <a class="btn" href="{% url 'mini_insta:update_profile'%}">Edit Profile</a>
+      <div style="margin-top: 12px; display:flex; gap:10px; align-items:center;">
+        {% if request.user.is_authenticated and my_profile %}
+          {% if my_profile.pk == profile.pk %}
+            <a class="btn" href="{% url 'mini_insta:update_profile' %}">Edit Profile</a>
+          {% else %}
+            {% if is_following %}
+              <a class="btn" href="{% url 'mini_insta:delete_follow' profile.pk %}">Unfollow</a>
+            {% else %}
+              <a class="btn" href="{% url 'mini_insta:follow_profile' profile.pk %}">Follow</a>
+            {% endif %}
+          {% endif %}
+        {% endif %}
       </div>
     </div>
       
