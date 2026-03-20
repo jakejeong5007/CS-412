@@ -3,7 +3,9 @@ from django.views.generic import ListView, DetailView
 from .models import Voter
 from django.db.models.query import QuerySet
 from django.shortcuts import render
-import plotly
+import plotly.graph_objects as go
+import plotly.io as pio
+from django.db.models import Count
 
 # Create your views here.
 
@@ -17,24 +19,32 @@ class VoterListView(ListView):
     paginate_by = 100
 
     def get_queryset(self):
+        """
+        Returns a queryset of voters that matches the selected filter.
+        """
         results = super().get_queryset()
 
+        # Filter by party affiliation
         part_af = self.request.GET.get("part_af")
         if part_af:
             results = results.filter(part_af=part_af)
 
+        # Filter by minimum birth year
         min_year = self.request.GET.get("min_date")
         if min_year:
             results = results.filter(dob__year__gte=min_year)
 
+        # Filter by maximum birth year
         max_year = self.request.GET.get("max_date")
         if max_year:
             results = results.filter(dob__year__lte=max_year)
 
+        # Filter by voter score
         voter_score = self.request.GET.get("voter_score")
         if voter_score:
             results = results.filter(voter_score=voter_score)
 
+        # Filter by election participation
         if self.request.GET.get("v20state"):
             results = results.filter(v20state=True)
 
@@ -53,8 +63,12 @@ class VoterListView(ListView):
         return results.order_by("last_name", "first_name")
 
     def get_context_data(self, **kwargs):
+        """
+        Returns context data.
+        """
         context = super().get_context_data(**kwargs)
 
+        # Choices for form filters
         context["party_choices"] = (
             Voter.objects.values_list("part_af", flat=True)
             .distinct()
@@ -89,59 +103,67 @@ class VoterDetailView(DetailView):
     model = Voter
     context_object_name = "voter"
 
-from django.views.generic import ListView
-from django.db.models import Count
-from .models import Voter
-
-import plotly.graph_objects as go
-import plotly.io as pio
-
-
 class GraphListView(ListView):
+    """
+    List view that also generates graphs for filtered voters.
+    """
+
     template_name = "voter_analytics/graphs.html"
     model = Voter
     context_object_name = "voters"
 
     def get_queryset(self):
+        """
+        Returns a queryset of voters that matches the selected filter.
+        """
         results = super().get_queryset()
 
-        part_af = self.request.GET.get("part_af", "")
+        # Filter by party affiliation
+        part_af = self.request.GET.get("part_af")
         if part_af:
             results = results.filter(part_af=part_af)
 
-        min_date = self.request.GET.get("min_date", "")
-        if min_date:
-            results = results.filter(dob__year__gte=min_date)
+        # Filter by minimum birth year
+        min_year = self.request.GET.get("min_date")
+        if min_year:
+            results = results.filter(dob__year__gte=min_year)
 
-        max_date = self.request.GET.get("max_date", "")
-        if max_date:
-            results = results.filter(dob__year__lte=max_date)
+        # Filter by maximum birth year
+        max_year = self.request.GET.get("max_date")
+        if max_year:
+            results = results.filter(dob__year__lte=max_year)
 
-        voter_score = self.request.GET.get("voter_score", "")
+        # Filter by voter score
+        voter_score = self.request.GET.get("voter_score")
         if voter_score:
             results = results.filter(voter_score=voter_score)
 
-        if "v20state" in self.request.GET:
+        # Filter by election participation
+        if self.request.GET.get("v20state"):
             results = results.filter(v20state=True)
 
-        if "v21town" in self.request.GET:
+        if self.request.GET.get("v21town"):
             results = results.filter(v21town=True)
 
-        if "v21primary" in self.request.GET:
+        if self.request.GET.get("v21primary"):
             results = results.filter(v21primary=True)
 
-        if "v22general" in self.request.GET:
+        if self.request.GET.get("v22general"):
             results = results.filter(v22general=True)
 
-        if "v23town" in self.request.GET:
+        if self.request.GET.get("v23town"):
             results = results.filter(v23town=True)
 
         return results.order_by("last_name", "first_name")
 
     def get_context_data(self, **kwargs):
+        """
+        Return context data including the Graphs.
+        """
         context = super().get_context_data(**kwargs)
         qs = self.get_queryset()
 
+        # Choices for graph filter form
         context["party_choices"] = (
             Voter.objects.values_list("part_af", flat=True)
             .distinct()
@@ -172,6 +194,7 @@ class GraphListView(ListView):
         context["v22general_checked"] = "v22general" in self.request.GET
         context["v23town_checked"] = "v23town" in self.request.GET
 
+        # Graph 1: distribution by birth year
         birth_data = (
             qs.values("dob__year")
             .annotate(total=Count("id"))
@@ -195,6 +218,7 @@ class GraphListView(ListView):
             yaxis_title="Number of Voters"
         )
 
+        # Graph 2: distribution by party affiliation
         party_data = (
             qs.values("part_af")
             .annotate(total=Count("id"))
@@ -221,6 +245,7 @@ class GraphListView(ListView):
             title="Distribution of Voters by Party Affiliation"
         )
 
+        # Graph 3: participation in each election
         election_labels = [
             "2020 State",
             "2021 Town",
@@ -251,6 +276,7 @@ class GraphListView(ListView):
             yaxis_title="Number of Voters"
         )
 
+        # Convert figures to HTML
         context["birth_year_graph"] = pio.to_html(
             fig_birth,
             full_html=False,
