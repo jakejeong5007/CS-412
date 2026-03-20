@@ -8,6 +8,9 @@ def load_data():
     """
     Function to load data records from CSV file into Django model instances.
     """
+
+    Voter.objects.all().delete()
+
     filename = "voter_analytics/newton_voters.csv"
     f = open(filename)
     f.readline()
@@ -41,7 +44,7 @@ def load_data():
 
         except Exception as e:
             print(f"Skipped: {fields}")
-            print(f"Because of {e}")
+            # print(f"Because of {e}")
 
 class Voter(models.Model):
     """
