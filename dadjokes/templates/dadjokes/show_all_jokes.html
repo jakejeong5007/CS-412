@@ -1,0 +1,14 @@
+<head>
+    <title>All Jokes</title>
+</head>
+<body>
+    <h1>All Jokes</h1>
+
+    {% for joke in jokes %}
+        <p>
+            <a href="{% url 'dadjokes:show_joke' joke.pk %}">{{ joke.text }}</a>
+        </p>
+    {% empty %}
+        <p>No jokes found.</p>
+    {% endfor %}
+</body>

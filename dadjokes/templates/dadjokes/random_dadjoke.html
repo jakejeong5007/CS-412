@@ -1,0 +1,20 @@
+<head>
+    <title>Random Dad Joke</title>
+</head>
+<body>
+    <h1>Random Dad Joke</h1>
+
+    {% if joke %}
+        <h2>Joke</h2>
+        <p>{{ joke.text }}</p>
+    {% else %}
+        <p>No joke available.</p>
+    {% endif %}
+
+    {% if picture %}
+        <h2>Picture</h2>
+        <img src="{{ picture.image_url }}" alt="Random picture" width="300">
+    {% else %}
+        <p>No picture available.</p>
+    {% endif %}
+</body>

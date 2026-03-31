@@ -1,0 +1,16 @@
+<head>
+    <title>All Pictures</title>
+</head>
+<body>
+    <h1>All Pictures</h1>
+
+    {% for picture in pictures %}
+        <div>
+            <a href="{% url 'dadjokes:show_picture' picture.pk %}">
+                <img src="{{ picture.image_url }}" alt="Picture" width="200">
+            </a>
+        </div>
+    {% empty %}
+        <p>No pictures found.</p>
+    {% endfor %}
+</body>
