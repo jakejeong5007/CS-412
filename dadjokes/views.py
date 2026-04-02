@@ -5,6 +5,9 @@ from .models import *
 # Create your views here.
 
 class RandomDetailView(TemplateView):
+    """
+    TemplateView to show a random picture and joke.
+    """
     template_name = "dadjokes/random_dadjoke.html"
 
     def get_context_data(self, **kwargs):
@@ -14,21 +17,33 @@ class RandomDetailView(TemplateView):
         return context
 
 class JokesListView(ListView):
+    """
+    ListView of all jokes.
+    """
     model = Joke
     template_name = "dadjokes/show_all_jokes.html"
     context_object_name = "jokes"
 
 class PicturesListView(ListView):
+    """
+    ListView of all pictures.
+    """
     model = Picture
     template_name = "dadjokes/show_all_pictures.html"
     context_object_name = "pictures"
 
 class JokeDetailView(DetailView):
+    """
+    DetailView for displaying one joke.
+    """
     model = Joke
     template_name = "dadjokes/show_joke.html"
     context_object_name = "joke"
 
 class PictureDetailView(DetailView):
+    """
+    DetailView for displaying one picture.
+    """
     model = Picture
     template_name = "dadjokes/show_picture.html"
     context_object_name = "picture"
