@@ -15,10 +15,10 @@ urlpatterns = [
 
     # API views
     path("api/", RandomJokeAPIView.as_view(), name='api_main'),
-    path("api/random", RandomJokeAPIView.as_view(), name='api_random'),
-    path("api/jokes", JokeListAPIView.as_view(), name="api_show_all_jokes"),
+    path("api/random/", RandomJokeAPIView.as_view(), name='api_random'),
+    path("api/jokes/", JokeListAPIView.as_view(), name="api_show_all_jokes"),
     path("api/joke/<int:pk>", JokeDetailAPIView.as_view(), name="api_show_joke"),
-    path("api/pictures", JokeListAPIView.as_view(), name="api_show_all_pictures"),
+    path("api/pictures/", JokeListAPIView.as_view(), name="api_show_all_pictures"),
     path("api/picture/<int:pk>", JokeDetailAPIView.as_view(), name="api_show_picture"),
     path("api/random_picture", RandomPictureAPIView.as_view(), name="api_random_picture"),
 ]
