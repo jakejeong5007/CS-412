@@ -1,7 +1,6 @@
 # File: views.py
 # Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
-# Description: Class-based views for listing profiles and viewing a single profile.
-
+# Description: Defines views for the mini_insta app, including page rendering logic and request handling for user interactions.
 
 
 from django.shortcuts import render
@@ -312,3 +311,89 @@ class UnlikePostView(LoginRequiredMixin, TemplateView):
         Like.objects.filter(post=post, profile=me).delete()
 
         return redirect(reverse("mini_insta:show_post", kwargs={"pk": post.pk}))
+    
+
+# Rest API views
+from django.contrib.auth import authenticate
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from .serializers import ProfileSerializer, PostSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+            return Response(
+                {"error": "Invalid username or password"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        token, created = Token.objects.get_or_create(user=user)
+        profile = Profile.objects.get(user=user)
+
+        return Response({
+            "token": token.key,
+            "profile_id": profile.pk,
+            "username": user.username,
+        })
+
+
+class ProfileListAPIView(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class ProfileDetailAPIView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class ProfilePostListAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        profile = Profile.objects.get(pk=pk)
+        posts = Post.objects.filter(profile=profile).order_by("-timestamp")
+        serializer = PostSerializer(posts, many=True)
+
+        # print("VIEW")
+        # print("FIELDS:", serializer.child.fields.keys())
+        # print("DATA:", serializer.data)
+
+        return Response(serializer.data)
+
+
+class FeedAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        profile = Profile.objects.get(pk=pk)
+        posts = profile.get_post_feed()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+
+class PostListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Post.objects.all().order_by("-timestamp")
+    serializer_class = PostSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        profile = Profile.objects.get(user=self.request.user)
+        serializer.save(profile=profile)

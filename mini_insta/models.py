@@ -69,7 +69,7 @@ class Post(models.Model):
     Post model
     """
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="photos")
     caption = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now=True)
 
@@ -106,7 +106,7 @@ class Photo(models.Model):
     Photo model
     """
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="photos")
     image_url = models.URLField(blank=True)
     timestamp = models.DateTimeField(auto_now=True)
     image_file = models.ImageField(blank=True)

@@ -1,7 +1,6 @@
 # File: urls.py
 # Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
-# Description: URL routes for the mini_insta app.
-
+# Description: Defines URL patterns for the mini_insta app and maps routes to their corresponding views.
 
 from django.urls import path
 from . import views
@@ -33,4 +32,12 @@ urlpatterns = [
     
     path('login/', auth_views.LoginView.as_view(template_name='mini_insta/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='mini_insta:show_all_profiles'), name='logout'),
+
+    # API views
+    path("api/profiles/", ProfileListAPIView.as_view(), name="api_profiles"),
+    path("api/profile/<int:pk>/", ProfileDetailAPIView.as_view(), name="api_profile"),
+    path("api/profile/<int:pk>/posts/", ProfilePostListAPIView.as_view(), name="api_profile_posts"),
+    path("api/profile/<int:pk>/feed/", FeedAPIView.as_view(), name="api_profile_feed"),
+    path("api/posts/", PostListCreateAPIView.as_view(), name="api_posts"),
+    path("api/login/", LoginAPIView.as_view(), name="api_login"),
 ]

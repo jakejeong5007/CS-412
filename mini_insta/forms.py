@@ -1,3 +1,7 @@
+# File: models.py
+# Author: Jake Jeong (jeongsh@bu.edu), 02/13/2026
+# Description: Defines database models for the mini_insta app, including data structures such as Profile and related objects.
+
 from django import forms
 from .models import *
 
